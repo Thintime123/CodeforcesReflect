@@ -20,3 +20,7 @@ C[TODO]
 
 ---
 
+### 过往记录
+1. [Codeforces Round 1027 (Div.3)](https://codeforces.com/contest/2114)
+
+
