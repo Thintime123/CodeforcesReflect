@@ -10,6 +10,8 @@ A[开始]
 -->
 B[20250527-Round1027-Div3]
 -->
+D[20250531-Round1028-Div2]
+-->
 C[TODO]
 %% B --> C{是否完成?}
 %% C -->|是| D[结束]
@@ -22,5 +24,5 @@ C[TODO]
 
 ### 过往记录
 1. [Codeforces Round 1027 (Div.3)](https://codeforces.com/contest/2114)
-
+1. [20250531-Round1028-Div2](https://codeforces.com/contest/2116)
 
