@@ -315,7 +315,7 @@ void solve() {
 
 ## F. Small Operations
 
-### 思路
+### 思路1
 
 1. 题意指给定$x, y, k$需要将$x$转化为$y$，可以有两种操作：将$x$乘一个在$[1, k]$范围内的数、将$x$除以一个在$[1, k]$范围内$x$的因子，操作不限次数，要求输出最小的操作次数，无法转换输出$-1$。
 2. 可以发现，将$x$转化为$y$需要将各自独有的因子进行转换，所以可以先预处理`x / gcd(x, y), y / gcd(x, y)`，然后进行转换操作
@@ -324,7 +324,7 @@ void solve() {
 5. 如果$n$的第$j$个因子是（前面）第$i$个因子的倍数，那么就有$dp[j] = min(dp[j], dp[i] + 1)$
 6. 注意本题时间限制为$per test : 3s$，$1e6$以内因子个数最多仅有$240$个，时间是够的
 
-### 示例代码
+### 示例代码1
 ```cpp
 #include<bits/stdc++.h>
 
@@ -392,5 +392,60 @@ signed main() {
     while(T--) solve();
 
     return 0;
+}
+```
+
+### 思路2
+
+- 值域 $bfs$ ，对于 $x, y$ ，我们分别找到一条最短路径，使得 $x, y$ 都转化为 $1$，然后将两条路径的长度相加即可。
+- 这个路径是什么意思呢？其实就是从 $x$ (或 $y$ )开始，通过在 $k$ 以内整除来连接他的因子，放入队列中，进行 $bfs$
+
+### 示例代码
+
+```cpp
+vector<vector<int>> fac(N);
+
+void init() {
+    fer(i, 1, N) {
+        for(int j = i; j < N; j += i) {
+            fac[j].push_back(i);
+        }
+    }
+}
+
+void solve() {
+    int x, y, k;
+    cin >> x >> y >> k;
+    if(k == 1) {
+        cout << (x == y ? 0 : -1) << '\n';
+        return;
+    }
+    int d = gcd(x, y);
+    x /= d, y /= d;
+    
+    auto bfs = [&](int n) -> int {
+        int dist[n + 1];
+        fill(dist, dist + n, inf);
+        dist[n] = 0;
+
+        queue<pii> q;
+        q.push({n, 0}); // n转化为x时需要y步
+
+        while(!q.empty()) {
+            auto [x, y] = q.front(); q.pop();
+            if(dist[x] < y) continue;
+
+            for(auto it = next(fac[x].rbegin()); it != fac[x].rend(); ++it) {
+                if(x / *it > k) break;
+                if(dist[*it] > y + 1) {
+                    dist[*it] = y + 1;
+                    q.push({*it, y + 1});
+                }
+            }
+        }
+        return dist[1];
+    };
+    int res = bfs(x) + bfs(y);
+    cout << (res >= inf ? -1 : res) << '\n';
 }
 ```
