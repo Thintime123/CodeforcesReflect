@@ -145,13 +145,67 @@ int main() {
 }
 ```
 
-## E - TODO
+## E
 
 ### Target
 
-### Thinking
+- 我们有两个长度为n的数组a和b
+- 在开始操作前，我们可以选择最多一个位置i，删除a[i]和b[i]
+- 之后可以进行任意次数的操作：选择位置i，将a[i]设为b[i+1]或将b[i]设为a[i+1]
+- 目标是最大化最终两个数组相同位置的元素数量
 
+### Thinking
+- 如果我们不删除任何位置，那么最终两个数组必须完全相同
+- 如果我们删除一个位置，那么最终两个数组除了这个位置外必须完全相同
+- 操作的本质是让相邻位置的元素可以互相交换
+- 这里使用贪心的思想，从后向前遍历数组
+- 对于每个位置，检查是否可以通过操作使当前位置的元素相同
+- 如果发现无法使当前位置相同，则记录这个位置作为可能的删除位置
+- 最终答案是所有可能删除位置中能获得的最大匹配数
 ### Code
 
+```c++
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define fer(i,m,n) for (ll i = m;i < n;i++)
+// #define fer
+const ll ILL=2167167167167167167ll;
+const int INF=2100000000;
 
+void solve(){
+    int N;
+    cin >> N;
+    vector<int> A(N), B(N);
+    fer(i, 0, N) cin >> A[i];
+    fer(i, 0, N) cin >> B[i];
+    fer(i, 0, N) if (i & 1) swap(A[i], B[i]);
+    vector<int> seenA(N + 1), seenB(N + 1);
+    for (int i = N - 1; i >= 0; i--){
+        fer(rp, 0, 2){
+            swap(A, B);
+            swap(seenA, seenB);
+            seenA[A[i]]++;
+            if (seenB[A[i]]){
+                cout << i + 1 << "\n";
+                return;
+            }
+            if (seenA[A[i]] > 2 || (seenA[A[i]] == 2 && A[i] != A[i + 1])){
+                cout << i + 1 << "\n";
+                return;
+            }
+        }
+    }
+    cout << "0\n";
+}
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+ 
+    int t = 1;
+    cin >> t;
+    while(t--)
+        solve();
+}
+```
 
