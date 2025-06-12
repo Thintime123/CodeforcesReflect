@@ -14,6 +14,8 @@ C[20250531-Round1028-Div2]
 -->
 D[20250608-Round1029-Div3]
 -->
+E[20250612-Round1030-Div2]
+-->
 END[TODO]
 %% B --> C{是否完成?}
 %% C -->|是| D[结束]
@@ -27,5 +29,6 @@ END[TODO]
 ### 过往记录
 1. [Codeforces Round 1027 (Div.3)](https://codeforces.com/contest/2114)
 2. [牛客小白月赛117](https://ac.nowcoder.com/acm/contest/111309#question)
-3. [Codeforces Round 1028 (Div. 2)](https://codeforces.com/contest/2116)
-4. [Codeforces Round 1029 (Div. 3)](https://codeforces.com/contest/2117)
+3. [Codeforces Round 1028 (Div.2)](https://codeforces.com/contest/2116)
+4. [Codeforces Round 1029 (Div.3)](https://codeforces.com/contest/2117)
+5. [Codeforces Round 1030 (Div.2)](https://codeforces.com/contest/2118)
