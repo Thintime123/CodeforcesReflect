@@ -33,9 +33,6 @@ void solve() {
             break;
         }
     }
-    if(a == -1 || b == -1) {
-        cout << "YES" << '\n';
-    }
     cout << (b - a + 1 <= x ? "YES" : "NO") << '\n';
 }
 ```
@@ -90,11 +87,11 @@ void solve() {
 
 ### 题意
 
-对数组进行分区，所有元素都在一个区间内，并且相邻的两个区间前区间为后区间的子集，求划分后总区间个数的最大值。
+对数组进行分区，每个元素在且只能在一个区间内，并且相邻的两个区间前区间为后区间的子集。要求满足条件的区间个数最大值。
 
 ### 思路
 
-将第一个数为单独一个区间，用 `set` 存每个区间，遇到可覆盖情况重置两个 `set` 即可
+将第一个数为单独一个区间，用两个 `set` 存前后区间，遇到可覆盖情况重置两个 `set` 即可
 
 ### 示例代码
 
@@ -129,11 +126,11 @@ void solve() {
 
 ### 题意
 
-给定一个数组，对每个索引 $i$ ，可以对所有 $a_i$ 同时进行减 $i$ 或者减 $n - i + 1$ 的操作，问能否最终数组所有元素变为 $0$ 。
+给定一个数组，对每个索引 $i$ ，可以对所有 $a_i$ 同时进行减 $i$ 或者减 $n - i + 1$ 的操作，问能否使得最终数组所有元素变为 $0$ 。
 
 ### 思路
 
-高斯消元，数组每个元素都是由 $i, n - i + 1$ 线性组合的，因此算前后相邻两组的 $x, y$ 是否都相等即可。注意处理特殊情况。
+高斯消元，数组每个元素都是 $i, n - i + 1$ 的线性组合，因此计算相邻两个二元一次方程组的 $x, y$ 是否都相等即可。注意处理特殊情况。
 ### 示例代码
 
 ```cpp
@@ -190,10 +187,17 @@ void solve() {
 
 ### 思路
 
+> 怎么样才能使得数组对应元素匹配呢？实际上就是在进行操作之后能够使得两数组出现下面这种情况：
+> _ _ x _ _
+> _ _ x _ _
+> 这样就可以将两个 $x$ 往前跳，操作之后可以使得在 $x$ 之前的所有元素都变为 $x$
+
+下面给出在不同情况下如何得出 a: _ _ x _ _ , b: _ _ x _ _ 的分析：_
+
 - 考虑单个数组：
-	- xx
-	- x_x -> 删除
-	- x _  _ x ->跳跃
+	- xx -> 将后面的 x 跳跃即可
+	- x_x -> 删除中间一对后变为上面的情况
+	- x _  _ x -> 将后面的 x 跳跃3步即可
 	-  也就是说 x _ _ ... _ _ x -> 均可以
 - 考虑两个数组
 	- 下面这种都行：
@@ -235,117 +239,119 @@ void solve() {
 
 ### 题意
 
-给一棵树，根节点编号为1，每个节点的值为 $1$ 或 $2$ ，所有值按照节点编号构成数组。现在要求所有子树包含的节点权值之和两两不同，求有多少重方法给节点赋值。
+给一棵树，根节点编号为1，每个节点的值为 $1$ 或 $2$ ，所有值按照节点编号构成数组。现在要求所有子树包含的节点权值之和要两两不同，求有多少种方法给节点赋值（有多少种数组给节点赋值）。
 
 ### 思路
 
 分为以下几种情况：
-1. 如果有多余两个叶子节点，那么方案数一定为 $0$，因为叶子节点权值一定会有重复的情况;
+1. 如果有多余两个叶子节点，那么方案数一定为 $0$，因为叶子节点权值一定会有重复的情况
 2. 如果叶子节点只有一个，那么所有节点权值均有两种情况，方案数为 $2^n$ ;
 3. 如果有两个叶子节点，那么需要考虑两个方面：深度是否相同、$1$ 放在深度较大的和放在深度较小的叶子节点上产生的方案数是否相同
 	- 记叶子节点为 $u, v$ ，最近公共祖先为 $p$，根节点深度为 $0$
-	- 如果深度相同：那么根据题意画一画，就能发现方案数是 $2^{depth[p] + 1}$
+	- 如果深度相同：那么根据题意画一画，就能发现方案数是 $2^{depth[p] + 1} * 2$ ，后面乘2是因为两个叶子节点是对称的，权值可以交换
 	- 如果深度不同
-		- 较大的叶子节点给 $1$: 方案数为 $2^{depth[u] - depth[v] + depth[p]}$
-		- 较大的叶子节点给 2: 方案书为 $2^{depth[u] - depth[v] + depth[p] + 1}$
+		- 深度较大的叶子节点给 $1$: 方案数为 $2^{depth[u] - depth[v] + depth[p]}$
+		- 深度较大的叶子节点给 2: 方案书为 $2^{depth[u] - depth[v] + depth[p] + 1}$
 		- 两者加起来，总方案数为 $3 * 2^{depth[u] - depth[v] + depth[p]}$
 4. 注意题目要求取模
-5. 取模前应用 $long long$ 防止溢出
+5. 取模前的计算应用 `long long` 防止溢出
 6. 可以学习使用自动取模类，模板可以自行搜索
 
 ### 算法思想
 
-LCA(最近公共祖先)算法，可以解决很多树上问题
+LCA(最近公共祖先)算法，可以解决很多树上问题。
+LCA算法实现方法有多种（$O(N)、O(logN)、O(1)$），括号内的复杂度指的是单次查询两个节点的最近公共祖先的时间复杂度。
+建议掌握  $O(logN)$ 的倍增（二分提升）实现方法，本题亦采用倍增的LCA实现。
 
 ### 示例代码
 ```cpp
 void solve() {
     int n;
     cin >> n;
-    vector<vector<int>> adjlist(n + 1);
-    int max_k = 18;
+    vector<int> adjlist[n + 1];
+    int LOG = 18;
     vector<int> depth(n + 1);
-    vector<vector<int>> fa(max_k + 1, vector<int>(n + 1));
+    vector<vector<int>> fa(LOG + 1, vector<int>(n + 1));
 
     fer(i, 0, n - 1) {
-    	int u, v;
-    	cin >> u >> v;
-    	adjlist[u].push_back(v);
-    	adjlist[v].push_back(u);
+        int u, v;
+        cin >> u >> v;
+        adjlist[u].push_back(v);
+        adjlist[v].push_back(u);
     }
 
     function<void(int, int)> dfs = [&](int u, int p) {
-    	fa[0][u] = p;
-    	depth[u] = p ? depth[p] + 1 : 0;
+        fa[0][u] = p;
+        depth[u] = p ? depth[p] + 1 : 0;
 
-    	for(int v : adjlist[u]) {
-    		if(v != p) {
-    			dfs(v, u);
-    		}
-    	}
+        for(int v : adjlist[u]) {
+            if(v != p) {
+                dfs(v, u);
+            }
+        }
     };
 
     auto init_lca = [&]() -> void {
-    	dfs(1, 0);
+        dfs(1, 0);
 
-    	fer(k, 1, max_k) {
-    		fer(i, 1, n + 1) {
-    			int mid = fa[k - 1][i];
-    			fa[k][i] = mid ? fa[k - 1][mid] : 0;
-    		}
-    	}
+        fer(k, 1, LOG) {
+            fer(i, 1, n + 1) {
+                int mid = fa[k - 1][i];
+                fa[k][i] = mid ? fa[k - 1][mid] : 0;
+            }
+        }
     };
 
     auto lca = [&](int u, int v) -> int {
-    	if(depth[u] < depth[v]) swap(u, v);
-    	int diff = depth[u] - depth[v];
+        if(depth[u] < depth[v]) swap(u, v);
+        int diff = depth[u] - depth[v];
 
-    	fer(k, 0, max_k) {
-    		if(diff & (1 << k)) {
-    			u = fa[k][u];
-    		}
-    	}
-    	if(u == v) return u;
+        fer(k, 0, LOG) {
+            if(diff & (1 << k)) {
+                u = fa[k][u];
+            }
+        }
+        if(u == v) return u;
 
-    	ferd(k, max_k, 0) {
-    		if(fa[k][u] && fa[k][u] != fa[k][v]) {
-    			u = fa[k][u];
-    			v = fa[k][v];
-    		}
-    	}
-    	return fa[0][u];
+        ferd(k, LOG, 0) {
+            if(fa[k][u] && fa[k][u] != fa[k][v]) {
+                u = fa[k][u];
+                v = fa[k][v];
+            }
+        }
+        return fa[0][u];
     };
 
-    auto fpow = [&](ll a, int b)  {
-    	ll res = 1 % MOD;
-    	while(b) {
-    		if(b & 1) res = 1LL * res * a % MOD;
-    		a = a * a % MOD;
-    		b >>= 1;
-    	}
-    	return res;
+    auto fpow = [&](ll a, int b) -> ll {
+        ll res = 1 % MOD;
+        while(b) {
+            if(b & 1) res = res * a % MOD;
+            a = a * a % MOD;
+            b >>= 1;
+        }
+        return res;
     };
 
     vector<int> leaf;
     fer(i, 2, n + 1) {
-    	if(adjlist[i].size() == 1) leaf.push_back(i);
+        if(adjlist[i].size() == 1) leaf.push_back(i);
     }
 
     if(leaf.size() > 2) {
-    	cout << 0 << '\n';
-    	return;
+        cout << 0 << '\n';
+        return;
     } else if(leaf.size() == 1) {
-    	cout << fpow(2, n) << '\n';
-    	return;
+        cout << fpow(2, n) << '\n';
+        return;
     }
 
     init_lca();
     int u = leaf[0], v = leaf[1];
     int ans = 0, d = depth[lca(u, v)];
     if(depth[u] == depth[v]) {
-    	ans = fpow(2, d + 2);
+        ans = fpow(2, d + 2);
     } else {
-    	ans = 3 * fpow(2, abs(depth[u] - depth[v]) + d) % MOD;
+        ans = 3 * fpow(2, abs(depth[u] - depth[v]) + d) % MOD;
     }
     cout << ans << '\n';
 }
