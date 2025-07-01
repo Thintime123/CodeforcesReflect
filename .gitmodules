@@ -1,0 +1,3 @@
+[submodule "XCPC"]
+	path = XCPC
+	url = git@github.com:Thintime123/XCPC.git
