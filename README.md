@@ -16,6 +16,8 @@ D[20250608-Round1029-Div3]
 -->
 E[20250612-Round1030-Div2]
 -->
+F[tsinghua2025]
+-->
 END[TODO]
 %% B --> C{是否完成?}
 %% C -->|是| D[结束]
@@ -32,3 +34,4 @@ END[TODO]
 3. [Codeforces Round 1028 (Div. 2)](https://codeforces.com/contest/2116)
 4. [Codeforces Round 1029 (Div. 3)](https://codeforces.com/contest/2117)
 5. [Codeforces Round 1030 (Div. 2)](https://codeforces.com/contest/2118)
+6. [tsinghua2025](https://tsinghua2025.contest.codeforces.com/group/gtDllGnZc0/contest/618814)
