@@ -1,1 +1,9 @@
-.obsidian
+.vscode/
+bin/
+test/
+*.code-workspace
+
+.obsidian/
+
+.cph/
+test_case/
